@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.ServicePerMapper">
+	<resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.ServicePer">
+		<!-- WARNING - @mbggenerated -->
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="actual_name" jdbcType="VARCHAR" property="actualName" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="id_card" jdbcType="VARCHAR" property="idCard" />
+		<result column="role" jdbcType="VARCHAR" property="role" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		<result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		<result column="version" jdbcType="INTEGER" property="version" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+	</resultMap>
+	<resultMap id="JudgeLoginResultMap" type="com.beiming.evidenceplatform.domin.dto.requestdto.JudgeLoginUserDTO">
+		<id column="id" jdbcType="BIGINT" property="userId"/>
+		<id column="actual_name" jdbcType="VARCHAR" property="actualName"/>
+		<id column="role" jdbcType="VARCHAR" property="serviceType"/>
+		<id column="socialIdentify" jdbcType="VARCHAR" property="socialIdentify"/>
+		<id column="password" jdbcType="VARCHAR" property="passWord"/>
+		<id column="phone" jdbcType="VARCHAR" property="phone"/>
+		<id column="organization_name" jdbcType="VARCHAR" property="organizationName"/>
+		<id column="status" jdbcType="VARCHAR" property="status"/>
+	</resultMap>
+	<resultMap id="ServicePerPersonalMap" type="com.beiming.evidenceplatform.domin.dto.requestdto.ServicePerPersonalDTO">
+		<id column="id" jdbcType="BIGINT" property="userId"/>
+		<result column="actual_name" jdbcType="VARCHAR" property="actualName"/>
+		<result column="phone" jdbcType="VARCHAR" property="phone"/>
+		<result column="socialIdentify" jdbcType="VARCHAR" property="socialIdentify"/>
+		<result column="role" jdbcType="VARCHAR" property="role"/>
+		<result column="status" jdbcType="VARCHAR" property="status"/>
+		<result column="head_url" jdbcType="VARCHAR" property="headImageUrl"/>
+	</resultMap>
+	<resultMap id="ServicePerResponseDTO" type="com.beiming.evidenceplatform.domain.dto.responsedto.ServicePerResponseDTO">
+		<id column="id" jdbcType="BIGINT" property="id"/>
+		<result column="actual_name" jdbcType="VARCHAR" property="name" />
+		<result column="id_card" jdbcType="VARCHAR" property="idCard" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="organization_name" jdbcType="VARCHAR" property="courtName" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="org_id" jdbcType="BIGINT" property="orgId" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+	</resultMap>
+	<!-- 法官列表 -->
+	<select id="queryJudgesByOrgIdAndType" resultMap="ServicePerResponseDTO">
+		SELECT DISTINCT p.id,p.actual_name,p.phone,p.id_card,p.create_time,n.id as org_id,n.organization_name,e.status 
+		FROM service_per p
+		LEFT JOIN orgnazation_service s ON p.id=s.spm_id
+		LEFT JOIN personnel e ON e.user_detail_id=p.id
+		LEFT JOIN orgnazation n ON s.org_id=n.id
+		WHERE n.id=#{orgId} AND e.role=#{type}
+	</select>
+	<!-- 通过id及type查询一个法官或法院管理员 -->
+	<select id="queryServicePerById" resultMap="ServicePerResponseDTO">
+		SELECT DISTINCT p.id,p.actual_name,p.phone,p.id_card,p.create_time,n.id as org_id,n.organization_name,e.status 
+		FROM service_per p
+		LEFT JOIN orgnazation_service s ON p.id=s.spm_id
+		LEFT JOIN personnel e ON e.user_detail_id=p.id
+		LEFT JOIN orgnazation n ON s.org_id=n.id
+		WHERE p.id=#{id} AND e.role=#{type}
+	</select>
+
+	<select id="getServicePerById" resultMap="BaseResultMap">
+		SELECT * FROM
+		service_per WHERE id=#{id}
+	</select>
+	<!-- 查询服务人员 及模糊查询 -->
+	<select id="queryAllServicePersByIdAndCode" resultMap="BaseResultMap">
+		SELECT *
+		FROM service_per s
+		LEFT JOIN orgnazation_service a ON a.spm_id=s.id
+		LEFT JOIN orgnazation o ON a.org_id=o.id
+		LEFT JOIN dict d ON
+		d.`code`=a.service_type
+		WHERE o.id=#{id} AND d.code=#{code}
+	</select>
+	<select id="queryAllServicePersByIdAndCodeAndSearch" resultMap="ServicePerResponseDTO">
+		SELECT DISTINCT p.id,p.actual_name,p.phone,p.id_card,p.create_time,n.id as org_id,n.organization_name,e.status 
+		FROM service_per p
+		LEFT JOIN orgnazation_service s ON p.id=s.spm_id
+		LEFT JOIN personnel e ON e.user_detail_id=p.id
+		LEFT JOIN orgnazation n ON s.org_id=n.id
+		WHERE s.org_id=#{id} AND e.role=#{type} 
+		<if test="search != null">
+		AND p.actual_name LIKE CONCAT('%',#{search},'%')
+		</if>
+	</select>
+	<!-- 查询服务人员 及模糊查询end -->
+	<!-- 根据手机号查询对应的角色 -->
+	<select id="queryServicePersByPhone" resultMap="ServicePerResponseDTO">
+		SELECT DISTINCT p.id,p.actual_name,p.phone,p.id_card,p.create_time,n.id as org_id,n.organization_name,e.status 
+		FROM service_per p
+		LEFT JOIN orgnazation_service s ON p.id=s.spm_id
+		LEFT JOIN personnel e ON e.user_detail_id=p.id
+		LEFT JOIN orgnazation n ON s.org_id=n.id
+		WHERE p.phone=#{phone} AND e.role=#{type}
+	</select>
+	<select id="getServicePersByPhone" resultMap="BaseResultMap">
+		SELECT * FROM
+		service_per WHERE phone=#{phone}
+	</select>
+	<select id="queryServicePersByPhoneNumber" resultMap="JudgeLoginResultMap">
+		SELECT *
+		FROM service_per WHERE phone=#{phone}
+	</select>
+	<select id="queryCourtManageUsrByPhoneAndPassWord" resultMap="ServicePerPersonalMap">
+		SELECT a.id,a.actual_name,b.status,a.head_url FROM
+		(service_per a
+		LEFT JOIN personnel b on
+		b.user_detail_id=a.id)
+		WHERE a.phone=#{phone} and
+		a.passWord=#{passWord} and b.role ='120003'
+	</select>
+	<select id="queryCourtUsrByPhoneAndPassWord" resultMap="ServicePerPersonalMap">
+		SELECT * FROM (
+  		SELECT a.id,a.actual_name,b.status,
+  		b.role role,a.role socialIdentify,a.head_url FROM
+				service_per a
+			LEFT JOIN personnel b on b.user_detail_id=a.id
+			WHERE a.phone=#{phone} and a.passWord=#{passWord}
+		) AS temp WHERE temp.role in ('120000','120003')
+	</select>
+	<select id="queryCourtUsrByUserId" resultMap="JudgeLoginResultMap">
+		SELECT
+		a.id,a.phone,a.actual_name,a.password,c.organization_name FROM
+		(service_per a
+		LEFT JOIN orgnazation_service b ON a.id=b.spm_id)
+		LEFT
+		JOIN orgnazation c ON b.org_id=c.id
+		WHERE a.id=#{userId} AND
+		b.service_type=#{userRole}
+	</select>
+	<insert id="insertServicePer" keyColumn="id"
+			keyProperty="id" parameterType="com.beiming.evidenceplatform.domain.ServicePer" useGeneratedKeys="true">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into
+		service_per
+		(phone,actual_name,id_card,create_time,role,password,create_user)
+		VALUES
+		(#{phone},#{actualName},#{idCard},now(),#{role},#{password},#{createUser})
+		
+	</insert>
+	
+	<update id="updatePhoneById">
+		UPDATE service_per SET phone=#{phone}
+		,update_time=NOW(),password=#{password},update_user=#{updateUser}
+		WHERE id=#{id}
+	</update>
+	<update id="updatePasswordById">
+		UPDATE service_per SET password=#{password}
+		,update_time=NOW(),update_user=#{updateUser} WHERE id=#{id}
+	</update>
+	<update id="updatePasswordByPhone">
+		UPDATE service_per SET password=#{password}
+		,update_time=NOW(),update_user=#{updateUser} WHERE phone=#{phone}
+	</update>
+
+	<select id="getServicePerByOrgId" resultMap="BaseResultMap">
+		SELECT DISTINCT p.id,p.actual_name,p.phone,p.id_card,p.create_time,n.id as org_id,n.organization_name,e.status
+		FROM service_per p
+		LEFT JOIN orgnazation_service s ON p.id=s.spm_id
+		LEFT JOIN personnel e ON e.user_detail_id=p.id
+		LEFT JOIN orgnazation n ON s.org_id=n.id
+		WHERE n.id=#{orgId} AND e.role="法官"
+	</select>
+</mapper>

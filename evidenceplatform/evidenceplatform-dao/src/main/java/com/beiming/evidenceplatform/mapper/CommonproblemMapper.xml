@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.CommonproblemMapper">
+	<resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.Commonproblem">
+		<!-- WARNING - @mbggenerated -->
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="problem" property="problem" jdbcType="VARCHAR" />
+		<result column="answer" property="answer" jdbcType="VARCHAR" />
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="frequency" property="frequency" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column">
+		id, problem, answer, create_date, frequency
+	</sql>
+
+	<select id="selectcommonproblemlists" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column" />
+		from commonproblem limit #{PageBean.pagego},#{PageBean.pageSize}
+	</select>
+
+
+	<select id="ordercommonproblemlist" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column" />
+		from commonproblem ORDER BY frequency desc
+	</select>
+
+	<select id="selectToPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column" />
+		from commonproblem
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<update id="updateToPrimaryKey" parameterType="com.beiming.evidenceplatform.domain.Commonproblem">
+		update commonproblem 
+		set
+		problem = #{problem,jdbcType=VARCHAR},
+		answer = #{answer,jdbcType=VARCHAR},
+		create_date = #{createDate,jdbcType=DATE},
+		frequency= #{frequency,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<delete id="deleteToPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		commonproblem
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insertcommonproblem" parameterType="com.beiming.evidenceplatform.domain.Commonproblem">
+		insert into commonproblem
+
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id == null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="problem != null">
+				#{problem,jdbcType=VARCHAR},
+			</if>
+			<if test="answer != null">
+				#{answer,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=DATE},
+			</if>
+			<if test="frequency != null">
+				#{frequency,jdbcType=INTEGER},
+			</if>
+
+		</trim>
+	</insert>
+</mapper>

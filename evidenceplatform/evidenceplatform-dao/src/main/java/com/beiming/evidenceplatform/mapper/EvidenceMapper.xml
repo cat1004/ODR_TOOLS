@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.EvidenceMapper">
+	<resultMap id="BaseResultMap"
+		type="com.beiming.evidenceplatform.domain.evidenceplatform.Evidence">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="user_id" jdbcType="BIGINT" property="userId" />
+		<result column="length" jdbcType="BIGINT" property="length" />
+		<result column="create_time" jdbcType="BIGINT" property="createTime" />
+		<result column="client_type" jdbcType="VARCHAR" property="clientType" />
+		<result column="statement" jdbcType="VARCHAR" property="statement" />
+		<result column="alg" jdbcType="VARCHAR" property="alg" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="hash" jdbcType="BIGINT" property="hash" />
+		<result column="evidence_type" jdbcType="VARCHAR" property="evidenceType" />
+		<result column="uri" jdbcType="VARCHAR" property="uri" />
+		<result column="cos_uri" jdbcType="VARCHAR" property="cosUri" />
+		<result column="file_id" jdbcType="VARCHAR" property="fileId" />
+		<result column="voucher_status" jdbcType="VARCHAR" property="voucherStatus" />
+		<result column="remarks" jdbcType="VARCHAR" property="remarks" />
+	</resultMap>
+
+	<insert id="saveEvidence" keyProperty="id"
+		parameterType="com.beiming.evidenceplatform.domain.evidenceplatform.Evidence"
+		useGeneratedKeys="true">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+			select LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO evidence(`user_id`, `length`, `status`, `create_time`,
+		`name`,`client_type`,`cos_uri`,`evidence_type`, `hash`,
+		`alg`,`statement`, `uri`,
+		`file_id`,`remarks`)
+		VALUES(
+		#{userId},#{length},#{status},#{createTime},
+		#{name},#{clientType },#{cosUri },
+		#{evidenceType}, #{hash},
+		#{alg},#{statement},#{uri}, #{fileId}, #{remarks})
+	</insert>
+
+	<!-- 分页查询 -->
+	<select id="findEvidence"
+		resultType="com.beiming.evidenceplatform.domain.evidenceplatform.responsedto.EvidenceDTO">
+		SELECT t0.`id` AS id, t0.`alg` AS alg, t0.`client_type` AS clientType,
+		t0.`create_time` AS
+		createTime, t0.`evidence_type` AS evidenceType, t0.`hash`, t0.`length`,
+		t0.`name`, t0.`statement`, t0.`status`, t0.`user_id` AS userId,
+		t0.`file_id` AS fileId,
+		t0.`voucher_status` AS voucherStatus, t0.`remarks`,t0.`uri` AS uri,
+		p.proof_id AS proofId
+		FROM evidence t0
+		LEFT JOIN proof p ON p.`evidence_id` = t0.`id`
+		<where>
+			<if test="userId != null and userId != ''">
+				t0.user_id = #{userId}
+			</if>
+
+			<if test="name != null and name != ''">
+				AND t0.name LIKE "%"#{name}"%"
+			</if>
+
+			<if test="startTime !=null and startTime !='' ">
+				AND t0.create_time <![CDATA[>=]]>
+				#{startTime}
+			</if>
+
+			<if test="endTime !=null and endTime!='' ">
+				AND t0.create_time <![CDATA[<=]]>
+				#{endTime}
+			</if>
+
+			<if test="status !=null and status !=''">
+				AND t0.status = #{status}
+			</if>
+
+			<if test="evidenceType !=null and evidenceType !=''">
+				AND t0.evidence_type = #{evidenceType}
+			</if>
+
+			<if test="clientType !=null and clientType !=''">
+				AND t0.client_type = #{clientType}
+			</if>
+			<!-- 存证凭据单 -->
+			<if test="proofId !=null and proofId !=''">
+				AND p.proof_id = #{proofId}
+			</if>
+		</where>
+		ORDER BY t0.id
+	</select>
+
+	<!-- 修改文件名 逻辑删除 备注 存证函 存证凭据单号 -->
+	<update id="updateData">
+		update evidence t
+		<set>
+			<if test="name != null and  name !=''">
+				t.`name` = #{name},
+			</if>
+			<if test="status != null and status!=''">
+				t.`status` = #{status},
+			</if>
+			<if test="remarks != null and remarks!=''">
+				t.`remarks` = #{remarks},
+			</if>
+			<if test="voucherStatus != null and voucherStatus!=''">
+				t.`voucher_status` = #{voucherStatus},
+			</if>
+		</set>
+		where t.`file_id` = #{fileId}
+	</update>
+
+	<!-- 根据用户和文件名查询 -->
+	<select id="findByUserIdAndName" resultMap="BaseResultMap">
+		select * from
+		evidence t0 where t0.`name` = #{name} and t0.`user_id` = #{userId}
+	</select>
+
+	<!-- 根据用户和文件名查询 -->
+	<select id="findFileId" resultMap="BaseResultMap">
+		select * from evidence t0
+		where t0.`file_id` = #{fileId}
+	</select>
+
+	<delete id="deleteEvidence">
+		DELETE FROM evidence where `file_id` = #{fileId}
+	</delete>
+
+	<select id="findById">
+		select * from evidence t0 where t0.`id` = #{id}
+	</select>
+
+	<select id="getEvidenceNumByUserId" parameterType="java.lang.Long"
+		resultType="Integer">
+		SELECT COUNT(*) as evidenceNum from evidence where user_id
+		= #{userId}
+	</select>
+
+	<select id="getEvidenceTotalSizeByUserId" parameterType="java.lang.Long"
+		resultType="String">
+		SELECT SUM(length) as totalSize from evidence where user_id
+		= #{userId}
+	</select>
+
+</mapper>

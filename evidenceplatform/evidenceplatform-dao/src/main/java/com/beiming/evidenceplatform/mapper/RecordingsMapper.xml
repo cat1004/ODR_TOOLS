@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.RecordingsMapper">
+  <resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.Recordings">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT"/>
+    <result column="corpore_house_id" property="corporeHouseId" jdbcType="BIGINT"/>
+    <result column="type" property="type" jdbcType="VARCHAR"/>
+    <result column="advice_time" property="adviceTime" jdbcType="TIMESTAMP"/>
+    <result column="advice_name" property="adviceName" jdbcType="VARCHAR"/>
+    <result column="advice_phone" property="advicePhone" jdbcType="VARCHAR"/>
+    <result column="advice_problem" property="adviceProblem" jdbcType="VARCHAR"/>
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+    <result column="version" property="version" jdbcType="INTEGER"/>
+    <result column="remark" property="remark" jdbcType="VARCHAR"/>
+  </resultMap>
+  <!-- 根据标的物详情id查询录音详情 -->
+  <select id="getRecordingsByCorporeHouseId" parameterType="int" resultMap="BaseResultMap">
+   select * from `recordings` where corpore_house_id=#{corporeHouseId}
+  </select>
+
+  <!--根据标的物详情id查询录音列表  -->
+  <select id="getRecordingsUrlByCorporeHouseId"
+    resultType="com.beiming.evidenceplatform.domin.dto.requestdto.RecordingsInfo">
+    SELECT
+    t0.type,
+    t0.advice_time,
+    t0.advice_name,
+    t0.advice_phone,
+    t0.advice_problem,
+    t2.url
+    FROM
+    recordings t0
+    inner join corpore_house t1 on t0.corpore_house_id=t1.id
+    left join photo_files t2 on t0.id=t2.recordings_id
+    <where>
+      <if test="corporeHouseId != null">
+        t0.corpore_house_id=#{corporeHouseId}
+      </if>
+    </where>
+    order by t0.advice_time;
+  </select>
+  <insert id="addRecordings" keyProperty="id" useGeneratedKeys="true">
+    insert into recordings
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="corporeHouseId != null">
+        corpore_house_id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="adviceTime != null">
+        advice_time,
+      </if>
+      <if test="adviceName != null">
+        advice_name,
+      </if>
+      <if test="advicePhone != null">
+        advice_phone,
+      </if>
+      <if test="adviceProblem != null">
+        advice_problem,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id, jdbcType=BIGINT},
+      </if>
+      <if test="corporeHouseId != null">
+        #{corporeHouseId, jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        #{type, jdbcType=VARCHAR},
+      </if>
+      <if test="adviceTime != null">
+        #{adviceTime, jdbcType=TIMESTAMP},
+      </if>
+      <if test="adviceName != null">
+        #{adviceName, jdbcType=VARCHAR},
+      </if>
+      <if test="advicePhone != null">
+        #{advicePhone, jdbcType=VARCHAR},
+      </if>
+      <if test="adviceProblem != null">
+        #{adviceProblem, jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime, jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime, jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser, jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser, jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version, jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark, jdbcType=VARCHAR},
+      </if>
+    </trim>
+    <selectKey resultType="long" keyProperty="id" order="AFTER">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+</mapper>

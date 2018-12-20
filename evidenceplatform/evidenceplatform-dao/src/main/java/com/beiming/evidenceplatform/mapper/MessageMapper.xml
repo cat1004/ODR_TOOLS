@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.MessageMapper">
+	<resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.Message">
+		<!-- WARNING - @mbggenerated -->
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="msg" property="msg" jdbcType="VARCHAR" />
+		<result column="is_reader" property="isReader" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<insert id="insertMessageWithUserId" parameterType="com.beiming.evidenceplatform.domain.Message">
+		INSERT INTO
+		message (user_id,msg,is_reader,create_time,is_delete) VALUES
+		(#{userId},#{msg},0,now(),0)
+	</insert>
+
+	<update id="updateIsReaderByMsgId" parameterType="java.lang.Integer">
+		UPDATE message
+		a SET a.is_reader=#{isReader} WHERE a.id=#{msgId}
+	</update>
+
+	<!--分页查询 -->
+	<select id="selectByPage" resultType="com.beiming.evidenceplatform.domain.Message">
+		SELECT * from message t
+		<where>
+			<if test="message.msg != null">
+				t.msg like "%"#{message.msg}"%" and t.is_delete=0 and
+				user_id = #{userId}
+			</if>
+			<if test="message.msg == null">
+				t.is_delete=0 and user_id = #{userId}
+			</if>
+		</where>
+	</select>
+
+	<select id="queryMessageById" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		SELECT * from message where id=#{msgId}
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteMessages" parameterType="java.util.List">
+		update message set is_delete = 1
+		where id in
+		<foreach item="id" collection="msgIds" open="(" close=")"
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

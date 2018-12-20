@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.DictMapper">
+
+  <resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.Dict">
+    <id column="id" property="id" jdbcType="BIGINT"/>
+    <result column="name" property="name" jdbcType="VARCHAR"/>
+    <result column="code" property="code" jdbcType="VARCHAR"/>
+    <result column="describ" property="describ" jdbcType="VARCHAR"/>
+    <result column="extend" property="extend" jdbcType="VARCHAR"/>
+    <result column="type" property="type" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <!-- 获取标的物的类型字典表 -->
+  <select id="getCorporeType" resultMap="BaseResultMap">
+    SELECT * FROM dict WHERE dict.type='corpore_type'
+  </select>
+
+  <!-- 获取标的物拍卖状态字段表 -->
+  <select id="getCorporeStatus" resultMap="BaseResultMap">
+    SELECT * FROM dict WHERE dict.type='corpore_status'
+  </select>
+  
+    <!-- 获取标的物拍卖状态字段表 -->
+  <select id="getcorporestate" parameterType="String" resultMap="BaseResultMap">
+    SELECT * FROM dict WHERE code=#{code}
+  </select>
+
+</mapper>

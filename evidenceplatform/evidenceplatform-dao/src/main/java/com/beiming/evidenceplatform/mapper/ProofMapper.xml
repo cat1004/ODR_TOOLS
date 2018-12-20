@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.ProofMapper">
+	<resultMap id="BaseResultMap"
+		type="com.beiming.evidenceplatform.domain.evidenceplatform.Proof">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="proof_id" jdbcType="VARCHAR" property="proofId" />
+		<result column="proof_url" jdbcType="VARCHAR" property="proofUrl" />
+		<result column="cos_uri" jdbcType="VARCHAR" property="cosUri" />
+		<!-- <association property="evidence" column="evidence_id"> <id property="id" 
+			column="id" /> <result property="name" column="name" /> </association> -->
+	</resultMap>
+
+	<select id="findByProofId"
+		resultType="com.beiming.evidenceplatform.domain.evidenceplatform.responsedto.VoucherDTO">
+		select p.* from proof p , evidence e where
+		p.evidence_id=e.id and p.proof_id= #{proofId}
+	</select>
+
+	<insert id="saveProof" useGeneratedKeys="true" keyColumn="id"
+		keyProperty="id"
+		parameterType="com.beiming.evidenceplatform.domain.evidenceplatform.Proof">
+		INSERT INTO proof(`proof_url`,`proof_id`,`evidence_id`,`cos_uri`)
+		VALUES( #{proofUrl},#{proofId},#{evidenceId},#{cosUri})
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<!-- 修改文件名 逻辑删除 备注 存证函 存证凭据单号 -->
+	<update id="updateData">
+		update proof p
+		<set>
+			<if test="proofUrl != null and  proofUrl !=''">
+				p.`proof_url` = #{proofUrl},
+			</if>
+			<if test="cosUri != null and cosUri!=''">
+				p.`cos_uli` = #{cosUri},
+			</if>
+		</set>
+		where p.`evidence_id` = #{evidence}
+	</update>
+
+
+	<select id="findById"
+		resultType="com.beiming.evidenceplatform.domain.evidenceplatform.responsedto.VoucherDTO">
+		select * from proof where id = #{id}
+	</select>
+
+	<delete id="deleteProof">
+		DELETE FROM proof where `evidence_id` = #{evidenceId}
+	</delete>
+
+	<select id="findByEvidenceId"
+		resultType="com.beiming.evidenceplatform.domain.evidenceplatform.responsedto.VoucherDTO">
+		select * from proof where evidence_id = #{evidenceId}
+	</select>
+
+</mapper>

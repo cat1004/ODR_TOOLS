@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <TITLE> ActiveX 插件测试代码</TITLE>
+</HEAD>
+<BODY>
+<div class="content_left_top_box">
+
+  <input type="button"
+         onclick="doStartPush('rtmp://23713.livepush.myqcloud.com/live/23808100002?bizid=23713&txSecret=402c034066a77a902cff37904847213a&txTime=5AF55854')"
+         value="开始视频">
+  <input type="button"
+         onclick="doStartPull('rtmp://23713.liveplay.myqcloud.com/live/23808100002?bizid=23713&txSecret=402c034066a77a902cff37904847213a&txTime=5AF55854')"
+         value="开始观看他人视频">
+  <div>
+    <span>111111</span>
+    <object ID="pusher1" CLASSID="CLSID:01502AEB-675D-4744-8C84-9363788ED6D6"
+            codebase="https://main.qcloudimg.com/raw/1ed56a789dd9663971da79d89850dc17/LiteAVAX_2.2.2.1.cab#version=2,2,1,0"
+            width="640"
+            height="480">
+    </object>
+
+  </div>
+  <div>
+    <span>444444</span>
+    <object ID="PULL" CLASSID="CLSID:99DD15EF-B353-4E47-9BE7-7DB4BC13613C"
+            codebase="https://main.qcloudimg.com/raw/1ed56a789dd9663971da79d89850dc17/LiteAVAX_2.2.2.1.cab#version=2,2,1,0"
+            width="640"
+            height="480">
+    </object>
+  </div>
+</div>
+<script>
+  function doStartPush(pushUrl) {
+
+    var dom = document.getElementById("pusher1");
+    var vRetInt = dom.startCameraPreview();
+    if (vRetInt > 0) {
+      console.log("success--")
+      dom.startPush(pushUrl);
+    }
+
+  }
+
+  function doStartPull(pullUrl) {
+
+    var player = document.getElementById("PULL");
+    player.setTXEPlayType(1);
+    player.setRenderWndSize(480, 360);
+    // player.setPlayerEventCallBack(PlayerEventListener, 200);
+    player.startPlay(pullUrl, 1);
+  }
+</script>
+</BODY>
+</HTML>

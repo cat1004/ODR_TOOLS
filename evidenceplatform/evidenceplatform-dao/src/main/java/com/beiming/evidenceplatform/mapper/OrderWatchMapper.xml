@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.OrderWatchMapper">
+	<resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.OrderWatch">
+		<!-- WARNING - @mbggenerated -->
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+		<result column="corpore_house_id" property="corporeHouseId"
+			jdbcType="BIGINT" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+		<result column="version" property="version" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column">
+		id, order_time, corpore_house_id, create_time,
+		update_time,create_user,update_user,version,remark
+	</sql>
+
+
+	<insert id="insertOrderWatch" parameterType="com.beiming.evidenceplatform.domain.OrderWatch"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into
+		order_watch
+		(id, order_time, corpore_house_id, create_time,
+		update_time,create_user,update_user,version,remark)
+		VALUES(#{id},#{orderTime},#{corporeHouseId},#{createTime},#{updateTime},#{createUser},#{updateUser},#{version},#{remark})
+
+		<selectKey resultType="long" keyProperty="id" order="AFTER">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<!-- 根据当前登录人电话查询自己的预约记录 -->
+	<select id="getUserOrderWatch" parameterType="java.lang.String"
+		resultType="com.beiming.evidenceplatform.domain.dto.OrderWatchToCorprehouseDTO">
+		SELECT cp.name,owp.order_phone,ow.order_time,owp.is_come
+		from order_watch_personnel owp
+		LEFT JOIN order_watch ow on
+		owp.order_watch_id=ow.id
+		LEFT JOIN corpore_house ch on
+		ch.id=ow.corpore_house_id
+		LEFT JOIN corpore cp on cp.id=ch.corpore_id
+		where owp.order_phone=#{phone,jdbcType=VARCHAR}
+	</select>
+
+
+	<!-- 根据标的物详情id查询看样安排、预约人数和签到人数 -->
+	<select id="getOrderWatchDTOListByCorporeHouseId" resultType="com.beiming.evidenceplatform.domain.dto.OrderWatchDTO">
+		SELECT ow.id, ow.order_time as orderTime,COUNT(*) as
+		peopleNum,SUM(CASE owp.is_come WHEN '1' THEN 1 END) as comNum from
+		order_watch ow INNER JOIN order_watch_personnel owp on
+		owp.order_watch_id=ow.id where ow.corpore_house_id=#{corporeHouseId}
+		and owp.del_flag=0 GROUP BY ow.id
+	</select>
+
+
+	<select id="getOrderWatchPersonnels" resultType="com.beiming.evidenceplatform.domain.OrderWatchPersonnel">
+		select owp.*
+		from order_watch ow LEFT JOIN order_watch_personnel owp
+		on ow.id =
+		owp.order_watch_id where ow.corpore_house_id = #{corporeHouseId}
+	</select>
+
+	<select id="getOrderWatchs" resultMap="BaseResultMap">
+		select id, order_time
+		from
+		order_watch  where corpore_house_id = #{corporeHouseId}
+	</select>
+
+	<select id="getOrderTimes" resultType="java.util.Date">
+		select order_time from order_watch where  corpore_house_id=#{corporeHouseId}
+	</select>
+
+</mapper>

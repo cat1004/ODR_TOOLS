@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.BankInfoMapper">
+	<resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.BankInfo">
+		<!-- WARNING - @mbggenerated -->
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+		<result column="bank_usestate" property="bankUsestate"
+			jdbcType="VARCHAR" />
+		<result column="bank_personmanager" property="bankPersonmanager"
+			jdbcType="VARCHAR" />
+		<result column="bank_phone" property="bankPhone" jdbcType="VARCHAR" />
+		<result column="auction_detail_id" property="auctionDetailId"
+			jdbcType="BIGINT" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+		<result column="version" property="version" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<select id="selectbankattribute" parameterType="String"
+		resultType="com.beiming.evidenceplatform.domain.BankInfo">
+		SELECT id,bank_name,bank_phone from bank_info where
+		bank_usestate=#{bankUsestate}
+	</select>
+	<select id="saveBankInfo" parameterType="String"
+		resultType="com.beiming.evidenceplatform.domain.BankInfo">
+		SELECT id,bank_name,bank_phone from bank_info where
+		bank_usestate=#{bankUsestate}
+	</select>
+	<select id="selectTest" parameterType="com.beiming.evidenceplatform.domin.dto.requestdto.BankTestRequestDTO"
+		resultType="com.beiming.evidenceplatform.domain.BankInfo">
+		SELECT id,bank_name,bank_phone from bank_info where
+		bank_usestate=#{bankUsestate}
+	</select>
+
+</mapper>

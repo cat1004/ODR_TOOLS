@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beiming.evidenceplatform.dao.CorporeHouseMapper">
+	<resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.CorporeHouse">
+		<!-- WARNING - @mbggenerated -->
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="survey_id" jdbcType="BIGINT" property="surveyId" />
+		<result column="floor" jdbcType="VARCHAR" property="floor" />
+		<result column="corpore_id" jdbcType="BIGINT" property="corporeId" />
+		<result column="auction_detail_id" jdbcType="BIGINT" property="auctionDetailId" />
+		<result column="detail_content" jdbcType="VARCHAR" property="detailContent" />
+		<result column="usering" jdbcType="VARCHAR" property="usering" />
+		<result column="years" jdbcType="VARCHAR" property="years" />
+		<result column="orientations" jdbcType="VARCHAR" property="orientations" />
+		<result column="acreage" jdbcType="VARCHAR" property="acreage" />
+		<result column="house_type" jdbcType="VARCHAR" property="houseType" />
+		<result column="land_nature" jdbcType="VARCHAR" property="landNature" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		<result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		<result column="version" jdbcType="INTEGER" property="version" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<!-- 根据标的物id查询 -->
+	<select id="getCorporeHouseByCorporeId" resultMap="BaseResultMap">
+		select * from corpore_house where corpore_id=#{corporeId}
+	</select>
+
+	<insert id="addCorporeHouse" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO corpore_house
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="surveyId != null">
+				survey_id,
+			</if>
+			<if test="floor != null">
+				floor,
+			</if>
+			<if test="corporeId != null">
+				corpore_id,
+			</if>
+			<if test="auctionDetailId != null">
+				auction_detail_id,
+			</if>
+			<if test="detailContent != null">
+				detail_content,
+			</if>
+			<if test="usering != null">
+				usering,
+			</if>
+			<if test="years != null">
+				years,
+			</if>
+			<if test="orientations != null">
+				orientations,
+			</if>
+			<if test="acreage != null">
+				acreage,
+			</if>
+			<if test="houseType != null">
+				house_type,
+			</if>
+			<if test="landNature != null">
+				land_nature,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="createUser != null">
+				create_user,
+			</if>
+			<if test="updateUser != null">
+				update_user,
+			</if>
+			<if test="version != null">
+				version,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id, jdbcType=BIGINT},
+			</if>
+			<if test="surveyId != null">
+				#{surveyId, jdbcType=BIGINT},
+			</if>
+			<if test="floor != null">
+				#{floor, jdbcType=VARCHAR},
+			</if>
+			<if test="corporeId != null">
+				#{corporeId, jdbcType=BIGINT},
+			</if>
+			<if test="auctionDetailId != null">
+				#{auctionDetailId, jdbcType=BIGINT},
+			</if>
+			<if test="detailContent != null">
+				#{detailContent, jdbcType=VARCHAR},
+			</if>
+			<if test="usering != null">
+				#{usering, jdbcType=VARCHAR},
+			</if>
+			<if test="years != null">
+				#{years, jdbcType=VARCHAR},
+			</if>
+			<if test="orientations != null">
+				#{orientations, jdbcType=VARCHAR},
+			</if>
+			<if test="acreage != null">
+				#{acreage, jdbcType=VARCHAR},
+			</if>
+			<if test="houseType != null">
+				#{houseType, jdbcType=VARCHAR},
+			</if>
+			<if test="landNature != null">
+				#{landNature, jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime, jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime, jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUser != null">
+				#{createUser, jdbcType=VARCHAR},
+			</if>
+			<if test="updateUser != null">
+				#{updateUser, jdbcType=VARCHAR},
+			</if>
+			<if test="version != null">
+				#{version, jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark, jdbcType=VARCHAR},
+			</if>
+		</trim>
+		<selectKey resultType="long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	<select id="getSurveyIdByCorporeHouseId" resultType="Long">
+		select survey_id from corpore_house where id = #{id}
+	</select>
+
+	<select id="getCorporeName" resultType="java.lang.String">
+		select c.name name from corpore_house ch left join corpore c on ch.corpore_id = c.id where ch.id = #{corporeHouseId}
+	</select>
+</mapper>

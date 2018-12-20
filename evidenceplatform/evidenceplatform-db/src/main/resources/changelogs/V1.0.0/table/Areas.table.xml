@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet id="create_table_areas" author="Rimon">
+    <sql>
+      CREATE TABLE `areas` (
+      `code` varchar(16) NOT NULL DEFAULT '' COMMENT '地区编号',
+      `sname` varchar(20) DEFAULT NULL COMMENT '短名称',
+      `lname` varchar(500) DEFAULT NULL COMMENT '长名称',
+      `level` int(11) DEFAULT NULL COMMENT '级别，省为1，市为2，区县为3',
+      `parent_code` varchar(20) DEFAULT NULL COMMENT '父级编号',
+      `canton_flag` int(11) DEFAULT NULL COMMENT ' 备用:市区为1,非市区为0',
+      `show_flag` int(11) DEFAULT NULL COMMENT '显示为1,不显示为0',
+      `name` varchar(255) DEFAULT NULL COMMENT '无用字段',
+      PRIMARY KEY (`CODE`),
+      KEY `i_areas_sname` (`SNAME`) USING BTREE,
+      KEY `i_areas_lname` (`LNAME`(255)) USING BTREE,
+      KEY `i_areas_paco` (`PARENT_CODE`) USING BTREE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='行政区域';
+    </sql>
+  </changeSet>
+</databaseChangeLog>

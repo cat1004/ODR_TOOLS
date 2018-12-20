@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beiming.evidenceplatform.dao.CorporeMapper">
+
+  <resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.Corpore">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="name" jdbcType="VARCHAR" property="name"/>
+    <result column="no" jdbcType="VARCHAR" property="no"/>
+    <result column="auction_time" jdbcType="TIMESTAMP" property="auctionTime"/>
+    <result column="assistanter_id" jdbcType="BIGINT" property="assistanterId"/>
+    <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+    <result column="org_id" jdbcType="BIGINT" property="orgId"/>
+    <result column="service_per_id" jdbcType="BIGINT" property="servicePerId"/>
+    <result column="type" jdbcType="VARCHAR" property="type"/>
+    <result column="status" jdbcType="VARCHAR" property="status"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+    <result column="version" jdbcType="INTEGER" property="version"/>
+    <result column="remark" jdbcType="VARCHAR" property="remark"/>
+    <result column="groundingtype" jdbcType="VARCHAR" property="groundingtype"/>
+  </resultMap>
+
+  <!-- 根据标的物id查询 -->
+  <select id="getCorporeById" resultType="com.beiming.evidenceplatform.domain.Corpore">
+		select * from corpore
+	</select>
+
+  <!-- 根据标的物id查询固定位置基本信息 -->
+  <select id="getCorporeDTOById" resultType="com.beiming.evidenceplatform.domain.dto.CorporeDTO">
+		SELECT
+		cp.no,cp.name,cp.auction_time as
+		auctionTime,cp.status,ad.auction_url
+		as auctionUrl,sp.actual_name as
+		servicePer,sv.name as surveyName,
+		sv.update_time as
+		updateTime,rc.consultant from corpore cp LEFT JOIN
+		corpore_house cph
+		on cp.id=cph.corpore_id
+		LEFT JOIN auction_detail ad
+		on
+		ad.id=cph.auction_detail_id LEFT JOIN
+		service_per sp on
+		sp.id=cp.service_per_id LEFT JOIN survey sv on
+		sv.id=cph.survey_id
+		LEFT JOIN real_condition rc on rc.id=cph.real_condition_id where
+		cp.id=#{id}
+	</select>
+
+  <!-- 根据标的物id查询详情 -->
+  <select id="getCorporeDetailDTOById" resultType="com.beiming.evidenceplatform.domain.dto.CorporeDetailDTO">
+		SELECT
+		cp.id,cph.id as cphId,
+		ad.id as adId,
+	  cp.no as cpNo,
+	  cp.name,cph.floor,
+	  cph.land_nature as landNature,
+	  cp.auction_time as auctionTime,
+	  ad.auction_price as auctionPrice,
+	  ad.aucton_period as auctionPeriod,
+	  ad.cash_deposit as cashDeposit,
+	  ad.auction_add_price as auctionAddPrice,
+	  ad.reserve_price as reservePrice,
+	  ad.preemption,
+	  cph.house_type as houseType,
+	  cph.years,cph.acreage,cph.usering,
+	  ar.lname as areaName,
+	  ad.auction_plat as auctionPlat,
+	  org.organization_name as orgName
+	  FROM corpore cp
+    INNER JOIN corpore_house cph ON cp.id=cph.corpore_id
+    INNER JOIN area ar ON ar.id=cp.area_id
+    INNER JOIN auction_detail ad ON ad.id=cph.auction_detail_id
+    INNER JOIN orgnazation org ON org.id=cp.org_id
+	  INNER JOIN auction_notice an ON an.auction_detail_id=ad.id
+    WHERE cp.id=#{id}
+	</select>
+
+  <!-- 根据详情id获取标的物相关须知 -->
+  <select id="getCorporeContentByAdId" resultType="string">
+    SELECT content FROM auction_notice an
+    INNER JOIN auction_detail ad ON  an.auction_detail_id=ad.id
+    WHERE ad.id=#{adId} AND an.type=#{noticeType}
+  </select>
+
+  <!-- 根据标的物id获取预约人数 -->
+  <select id="getReservationNumber" resultType="int">
+    SELECT count(*) FROM order_watch ow
+    INNER JOIN corpore_house cph ON cph.id=ow.corpore_house_id
+    WHERE cph.id=#{cphId};
+  </select>
+
+  <!--分页查询  -->
+  <select id="selectByifPage" resultType="com.beiming.evidenceplatform.domain.dto.CorporeInfoDTO">
+    SELECT t0.id,t0.`no`,t0.`name`,t0.auction_time,t0.type,t0.`status`,t1.organization_name as
+    orgName, t2.lname as areaName/*,t4.auction_url as auctionUrl*/
+    FROM corpore t0
+    left JOIN orgnazation t1 ON t0.org_id = t1.id
+    left JOIN area t2 ON t0.area_id = t2.id /*left
+    JOIN auction_detail t4 ON t3.id = t4.corpore_house_id*/
+    <where>
+      <if test="corporeRequestDTO.orgId != null">
+        and (t0.org_id =#{corporeRequestDTO.orgId} or t1.parent_id=#{corporeRequestDTO.orgId})
+      </if>
+      <if test="corporeRequestDTO.type != null">
+        and t0.type =#{corporeRequestDTO.type}
+      </if>
+      <if test="corporeRequestDTO.status != null">
+        and t0.status =#{corporeRequestDTO.status}
+      </if>
+      <if test="corporeRequestDTO.groundingtype != null">
+        and t0.groundingtype =#{corporeRequestDTO.groundingtype}
+      </if>
+      <if test="corporeRequestDTO.name != null">
+        and t1.name like "%"#{corporeRequestDTO.name}"%"
+      </if>
+    </where>
+  </select>
+
+  <!-- 获取特定法院下标的物的数量 -->
+  <select id="getCorporeCountOfCourt" resultType="int">
+    SELECT count(*) FROM corpore cp INNER JOIN orgnazation org
+    ON cp.org_id=org.id WHERE org.id=#{organizationId};
+  </select>
+
+  <!-- 获取有标的物的地级市和拥有标的物的数量 -->
+  <select id="getCorporeCountByCity" resultType="com.beiming.evidenceplatform.domain.CorporeCityDTO">
+    SELECT ar.id as areaId,ar.sname as areaName,count(*) as corporeCount FROM corpore cp
+    INNER JOIN area ar ON ar.id=cp.area_id
+    WHERE ar.level=2 GROUP BY ar.id
+  </select>
+
+  <!-- 根据标的物类型查询标的物列表-首页展示数据 -->
+  <select id="getCorporeByType" resultType="com.beiming.evidenceplatform.domain.dto.CorporeInfoDTO">
+    SELECT cp.id,cp.no,cph.id as cphId,cp.name,cp.auction_time as auctionTime,
+    ad.auction_price as auctionPrice
+    ,cp.status,ad.auction_url as auctionUrl,
+    ar.lname as areaName,org.organization_name as orgName
+    FROM corpore cp
+    INNER JOIN corpore_house cph ON cp.id=cph.corpore_id
+    INNER JOIN auction_detail ad ON cph.corpore_id=ad.corpore_house_id
+    INNER JOIN area ar ON cp.area_id=ar.id
+    INNER JOIN orgnazation org ON cp.org_id=org.id
+    WHERE cp.type=#{typeId}
+    ORDER BY cp.auction_time
+    <if test="pageSize != null">
+      LIMIT #{pageSize}
+    </if>
+  </select>
+
+  <!-- 根据查询对象获取标的物列表 -->
+  <select id="getCorporesByQueryDto"
+    parameterType="com.beiming.evidenceplatform.domin.dto.requestdto.CorporeRequestQueryDTO"
+    resultType="com.beiming.evidenceplatform.domain.dto.CorporeInfoDTO">
+    SELECT
+    cp.id,cp.no,cph.id as cphId,ar.lname as areaName,
+    cp.name,cp.auction_time as auctionTime,
+    ad.auction_price as auctionPrice
+    ,cp.status,ad.auction_url as auctionUrl,
+    org.organization_name as orgName
+    FROM corpore cp
+    INNER JOIN corpore_house cph ON cp.id=cph.corpore_id
+    INNER JOIN auction_detail ad ON cph.corpore_id=ad.corpore_house_id
+    INNER JOIN area ar ON cp.area_id=ar.id
+    INNER JOIN orgnazation org ON cp.org_id=org.id
+    <where>
+      <if test="orgId != null and '' != orgId">
+        cp.org_id=#{orgId}
+      </if>
+      <if test="corporeName != null and '' != corporeName">
+        AND cp.name LIKE CONCAT('%',#{corporeName},'%')
+      </if>
+      <if test="corporeType != null and '' != corporeType">
+        AND cp.type=#{corporeType}
+      </if>
+      <if test="areaId !=null and '' != areaId">
+        AND ar.id=#{areaId}
+      </if>
+      <if test="minPrice != null and '' != minPrice and maxPrice !=null and '' != maxPrice">
+        AND ad.auction_price BETWEEN #{minPrice} AND #{maxPrice}
+      </if>
+      <if test="corporeStatus != null and '' != corporeStatus">
+        AND cp.status=#{corporeStatus}
+      </if>
+      <if test="day != null and '' != day">
+        AND DATEDIFF(cp.auction_time,NOW())&lt;=0 AND DATEDIFF(cp.auction_time,NOW())&gt;-#{day}
+      </if>
+    </where>
+    ORDER BY cp.auction_time
+  </select>
+
+  <!--  根据cphId获取对应的标的物详情图片的路径  -->
+  <select id="getCorporePhotoUrlByCphId" resultType="string">
+    SELECT pf.url as photoUrl
+    FROM corpore_house cph
+    INNER JOIN photo_files pf ON cph.id=pf.corpore_house_id
+    WHERE pf.del_flag=0 AND pf.survey_id is null AND cph.id=#{cphId};
+  </select>
+
+  <insert id="insertCorpore" useGeneratedKeys="true" keyProperty="id">
+    insert into corpore
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="assistanterId != null">
+        assistanter_id,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="areaId != null">
+        area_id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="assistanterId != null">
+        #{assistanterId,jdbcType=BIGINT},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null">
+        #{areaId,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    <selectKey resultType="long" keyProperty="id" order="AFTER">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <!-- 小程序分页查询展示类表 -->
+  <select id="selectByMobileifPage"
+    resultType="com.beiming.evidenceplatform.domain.dto.CorporeInfoDTO">
+    SELECT
+    distinct t0.`id`,
+    t0.`name`,
+    t0.`no`,
+    t0.auction_time AS auctionTime,
+    t2.auction_url,
+    t3.url AS photoUrl,t0.`status`
+    FROM
+    corpore t0
+    /* left JOIN corpore_house t1 ON t0.id = t1.corpore_house_id*/
+    left JOIN auction_detail t2 ON t0.id = t2.corpore_house_id
+    left JOIN photo_files t3 ON t0.id = t3.corpore_house_id
+    left JOIN orgnazation t4 on t0.org_id=t4.id
+    <where>
+      <if test="corporeRequestDTO.orgId !=null">
+        and (t0.org_id =#{corporeRequestDTO.orgId} or t4.parent_id=#{corporeRequestDTO.orgId}) and
+        t3.real_condition_id=is null
+      </if>
+      <if test="corporeRequestDTO.type != null">
+        and t0.type =#{corporeRequestDTO.type}
+      </if>
+      <if test="corporeRequestDTO.status != null">
+        and t0.status =#{corporeRequestDTO.status}
+      </if>
+      <if test="corporeRequestDTO.groundingtype != null">
+        and t0.groundingtype =#{corporeRequestDTO.groundingtype}
+      </if>
+    </where>
+  </select>
+
+</mapper>

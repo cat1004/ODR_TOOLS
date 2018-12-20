@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.AssistanterMapper">
+	<resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.Assistanter">
+		<!-- WARNING - @mbggenerated -->
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="actual_name" jdbcType="VARCHAR" property="actualName" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="id_card" jdbcType="VARCHAR" property="idCard" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		<result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		<result column="version" jdbcType="INTEGER" property="version" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+	</resultMap>
+	<resultMap id="AssistantPersonalMap" type="com.beiming.evidenceplatform.domin.dto.requestdto.AssistantPersonalDTO">
+		<!-- WARNING - @mbggenerated -->
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="actual_name" jdbcType="VARCHAR" property="actualName" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="id_card" jdbcType="VARCHAR" property="idCard" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="head_url" jdbcType="VARCHAR" property="headImageUrl" />
+	</resultMap>
+	<resultMap id="AssistanterResponseDTO"
+		type="com.beiming.evidenceplatform.domain.dto.responsedto.AssistanterResponseDTO">
+		<id column="id" jdbcType="BIGINT" property="id"/>
+		<result column="actual_name" jdbcType="VARCHAR" property="name" />
+		<result column="id_card" jdbcType="VARCHAR" property="idCard" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+	</resultMap>
+	<sql id = "AssistanterWhereClause">
+		<where>
+			<trim prefixOverrides = "and">
+				<if test = "userId != null">
+					and a.id=#{userId}
+				</if>
+				<if test = "phone != null">
+					and a.phone=#{phone}
+				</if>
+				<if test = "password != null">
+					and a.password=#{password}
+				</if>
+			</trim>
+		</where>
+	</sql>
+	<select id="queryAssistantUsrByPhoneAndPassWord" resultMap="BaseResultMap">
+		SELECT * FROM
+		assistanter a
+		<include refid = "AssistanterWhereClause" />
+	</select>
+	<select id="queryAssistantPersonal" resultMap="AssistantPersonalMap">
+		SELECT a.id,a.actual_name,a.password,a.phone,a.id_card,b.status,a.head_url FROM assistanter a
+		LEFT JOIN personnel b ON a.id=b.user_detail_id
+		<include refid = "AssistanterWhereClause" />
+		AND b.role='120002'
+	</select>
+	<!-- 查询所有辅助人员 -->
+	<select id="queryAllAssistanter" resultMap="AssistanterResponseDTO">
+		SELECT a.id,a.actual_name,a.id_card,a.phone,a.create_time,p.status FROM assistanter a
+		LEFT JOIN personnel p ON a.id=p.user_detail_id
+		WHERE p.role=120002
+	</select>
+	<select id="queryAssistanterByPhone" resultMap="BaseResultMap">
+		SELECT * FROM assistanter WHERE phone=#{phone}
+	</select>
+	<!-- 查询一个辅助人员 -->
+	<select id="queryAssistanterById" resultMap="AssistanterResponseDTO">
+		SELECT a.id,a.actual_name,a.id_card,a.phone,a.create_time,p.status FROM assistanter a
+		LEFT JOIN personnel p ON a.id=p.user_detail_id
+		WHERE p.role=120002 AND a.id=#{id}
+	</select>
+	<!-- 搜索辅助人员 -->
+	<select id="queryAssistanterByName" resultMap="AssistanterResponseDTO">
+		SELECT a.id,a.actual_name,a.id_card,a.phone,a.create_time,p.status FROM assistanter a
+		LEFT JOIN personnel p ON a.id=p.user_detail_id
+		WHERE p.role=120002 AND a.actual_name LIKE CONCAT('%',#{name},'%')
+	</select>
+	<insert id="insertAssistanter" keyColumn="id"
+			keyProperty="id" parameterType="com.beiming.evidenceplatform.domain.Assistanter" useGeneratedKeys="true">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO assistanter (actual_name,phone,id_card,create_time,password,create_user) VALUES(#{actualName},#{phone},#{idCard},now(),#{password},#{createUser})
+	</insert>
+	<update id="updatePhoneById">
+		UPDATE assistanter SET phone=#{phone}, update_time=now(), password=#{password}, update_user=#{updateUser} WHERE id=#{id}
+	</update>
+	<update id="updatePasswordById">
+		UPDATE assistanter SET password=#{password}, update_time=now(), update_user=#{updateUser} WHERE id=#{id}
+	</update>
+	<update id="updateStatus">
+		UPDATE assistanter SET status=#{status}, update_time=now(), update_user=#{updateUser} WHERE id=#{id}
+	</update>
+	<update id="updatePasswordByUserId">
+		UPDATE assistanter SET password=#{password}, update_time=now() WHERE id=#{uerId}
+	</update>
+	<update id="updatePasswordByPhone">
+		UPDATE assistanter SET password=#{password}, update_time=now() WHERE phone=#{phone}
+	</update>
+</mapper>

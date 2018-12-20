@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet id="create_table_arbitration_user_proxy" author="Rimon">
+    <sql>
+      CREATE TABLE `arbitration_user_proxy` (
+      `id` varchar(32) NOT NULL COMMENT '主键id',
+      `user_id` varchar(32) NOT NULL COMMENT '用户id',
+      `rel_user_id` varchar(32) NOT NULL COMMENT '关联用户id',
+      `user_relationship`	varchar(1) NOT NULL COMMENT '与当事人关系律师，亲属，推荐公民，公司员工，-其他',
+      `law_firm_name`	varchar(500)	NOT NULL COMMENT '所在律师事务所名称',
+      `office_url`	varchar(500)	NOT NULL COMMENT '事务所证明材料',
+      `proxy_url`	varchar(500)	NOT NULL COMMENT '委托书照片',
+      `lawyer_certificate_url`	varchar(500) NOT NULL COMMENT '律师执业证',
+      `auth_type` varchar(50) NOT NULL COMMENT '授权方式',
+      `rel_proof_url` varchar(500) NOT NULL COMMENT '关系证明文件',
+      `status` varchar(2) DEFAULT NULL COMMENT '状态:0-正常,1-删除',
+      `remark` varchar(1024) DEFAULT NULL COMMENT '备注',
+      `create_user` varchar(32) DEFAULT NULL COMMENT '创建人',
+      `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+      `update_user` varchar(32) DEFAULT NULL COMMENT '修改人',
+      `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+      `version` int(11) DEFAULT '0' COMMENT '版本号',
+      PRIMARY KEY (`id`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '代理关系及相关证明材料表';
+    </sql>
+  </changeSet>
+</databaseChangeLog>

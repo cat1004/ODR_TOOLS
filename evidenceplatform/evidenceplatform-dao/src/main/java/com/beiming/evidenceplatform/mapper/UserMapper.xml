@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.UserMapper">
+	<resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.User">
+		<!-- WARNING - @mbggenerated -->
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="email" jdbcType="VARCHAR" property="email" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		<result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		<result column="version" jdbcType="INTEGER" property="version" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+
+
+	</resultMap>
+
+
+	<resultMap id="single_userinfomap" type="com.beiming.evidenceplatform.domain.User">
+		<!-- WARNING - @mbggenerated -->
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="email" jdbcType="VARCHAR" property="email" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		<result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		<result column="version" jdbcType="INTEGER" property="version" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+
+		<!--assocication可以指定联合的JavaBean对象 property="userdetail"指定哪个属性是联合的对象 javaType:指定这个属性对象的类型 -->
+		<association javaType="com.beiming.evidenceplatform.domain.UserDetail"
+			property="userdetail">
+			<id column="id" jdbcType="BIGINT" property="id" />
+			<result column="name" jdbcType="VARCHAR" property="name" />
+			<result column="role" jdbcType="VARCHAR" property="role" />
+			<result column="actual_name" jdbcType="VARCHAR" property="actualName" />
+			<result column="user_id" jdbcType="BIGINT" property="userId" />
+			<result column="address" jdbcType="VARCHAR" property="address" />
+			<result column="phone" jdbcType="VARCHAR" property="phone" />
+			<result column="company" jdbcType="VARCHAR" property="company" />
+			<result column="company_address" jdbcType="VARCHAR" property="companyAddress" />
+			<result column="deptname" jdbcType="VARCHAR" property="deptname" />
+			<result column="position" jdbcType="VARCHAR" property="position" />
+			<result column="area_id" jdbcType="VARCHAR" property="areaId" />
+			<result column="sex" jdbcType="VARCHAR" property="sex" />
+			<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+			<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+			<result column="create_user" jdbcType="VARCHAR" property="createUser" />
+			<result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+			<result column="version" jdbcType="INTEGER" property="version" />
+			<result column="remark" jdbcType="VARCHAR" property="remark" />
+			<result column="capacity" jdbcType="VARCHAR" property="capacity" />
+
+		</association>
+
+	</resultMap>
+
+	<resultMap id="BidderUserDTO"
+		type="com.beiming.evidenceplatform.domin.dto.requestdto.BidderUserDTO">
+		<id column="id" jdbcType="BIGINT" property="userId" />
+		<id column="actual_name" jdbcType="BIGINT" property="actualName" />
+		<id column="role" jdbcType="BIGINT" property="socialIdentify" />
+		<id column="head_url" jdbcType="BIGINT" property="headImageUrl" />
+	</resultMap>
+	<sql id="single_Column">
+		id, name, password, email, create_time,create_user
+	</sql>
+
+
+	<select id="selectuseranddetailinfo" parameterType="java.lang.Integer"
+		resultMap="single_userinfomap">
+		select
+		u.id,u.name,u.password,u.email,u.create_time,u.create_user,
+		ud.actual_name,ud.sex,ud.phone,ud.company,ud.company_address,ud.deptname,ud.position
+		from user u
+		LEFT JOIN user_detail ud on u.id=ud.user_id where u.id =
+		#{id,jdbcType=INTEGER}
+	</select>
+	<select id="queryBidderUserByNameAndPassWord" parameterType="java.lang.String"
+		resultMap="BidderUserDTO">
+		select
+		a.id,b.actual_name,b.role,a.head_url
+		from user a
+		LEFT
+		JOIN user_detail b ON a.id=b.user_id
+		where b.phone=#{phone} AND
+		password=#{passWord}
+	</select>
+	<select id="queryBidderUserByPhone" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from user a
+		LEFT JOIN user_detail b ON
+		a.id=b.user_id
+		where b.phone=#{phone}
+	</select>
+	<select id="queryBidderUserById" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select * from user where id=#{userId}
+	</select>
+	<select id="queryBidderUserInfoById" parameterType="java.lang.Long"
+		resultType="com.beiming.evidenceplatform.domain.dto.UserDTO">
+		select
+		ud.name,ud.phone,u.email,u.head_url,ud.actual_name,ud.id_card,ud.capacity,ud.usage_amount
+		as usageAmount
+		from user u
+		INNER JOIN user_detail ud on u.id=ud.user_id
+		and
+		u.id=#{userId}
+	</select>
+	<insert id="insertUser" keyProperty="id"
+		parameterType="com.beiming.evidenceplatform.domain.User"
+		useGeneratedKeys="true">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO user (name,password,create_time)
+		VALUES(#{name},#{password},now())
+	</insert>
+	<update id="updateUserPassWordById">
+		UPDATE user SET password=#{password}
+		,update_time=NOW() WHERE id=#{userId}
+	</update>
+	<update id="updateUserPassWordByPhone" parameterType="java.lang.String">
+		UPDATE user
+		a
+		LEFT JOIN user_detail b ON a.id=b.user_id
+		SET a.password=#{password}
+		,a.update_time=NOW()
+		WHERE b.phone=#{phone}
+	</update>
+	<update id="updateUserNameById">
+		UPDATE user
+		a
+		LEFT JOIN user_detail b ON a.id=b.user_id
+		SET a.name=#{name}
+		,b.name=#{name}
+		WHERE a.id=#{userId}
+	</update>
+	<update id="updateUserEmailById">
+		UPDATE user
+		a SET a.email=#{email} WHERE
+		a.id=#{userId}
+	</update>
+
+</mapper>

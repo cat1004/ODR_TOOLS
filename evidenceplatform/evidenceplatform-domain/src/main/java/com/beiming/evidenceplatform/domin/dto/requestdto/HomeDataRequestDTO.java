@@ -1,0 +1,1 @@
+package com.beiming.evidenceplatform.domin.dto.requestdto;import lombok.Data;/** * @Description: 监督端-首页数据总览查询DTO * @Param: * @return: * @Author: fenghouzhi * @Date: 2018/7/6 */@Datapublic class HomeDataRequestDTO {  /**   * 组织机构Id   */  private String orgId;  /**   * 法官Id   */  private String judgeId;}

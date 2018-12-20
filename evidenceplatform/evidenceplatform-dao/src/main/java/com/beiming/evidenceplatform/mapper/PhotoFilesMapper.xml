@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.PhotoFilesMapper">
+
+  <resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.PhotoFiles">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT"/>
+    <result column="survey_id" property="surveyId" jdbcType="BIGINT"/>
+    <result column="name" property="name" jdbcType="VARCHAR"/>
+    <result column="url" property="url" jdbcType="VARCHAR"/>
+    <result column="recordings_id" property="recordingsId" jdbcType="BIGINT"/>
+    <result column="auction_notice_id" property="auctionNoticeId" jdbcType="BIGINT"/>
+    <result column="corpore_house_id" property="corporeHouseId" jdbcType="BIGINT"/>
+    <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    <result column="content" property="content" jdbcType="VARCHAR"/>
+    <result column="type" property="type" jdbcType="VARCHAR"/>
+    <result column="delivery_pd_id" property="deliveryPdId" jdbcType="BIGINT"/>
+    <result column="real_condition_id" property="realConditionId" jdbcType="BIGINT"/>
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+    <result column="version" property="version" jdbcType="INTEGER"/>
+    <result column="remark" property="remark" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <!-- 根据相应id查询图片信息 -->
+  <select id="getPhotosList" resultMap="BaseResultMap">
+   select * from `photo_files` where ${column}=#{id}
+  </select>
+
+  <update id="updatePhotoFiles">
+    update photo_files set del_flag=#{delFlag}
+    <where>
+      <if test="url != null">
+        url = #{url}
+      </if>
+    </where>
+  </update>
+
+  <insert id="savePhotoFiles" keyProperty="id" useGeneratedKeys="true">
+    insert into photo_files
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="surveyId != null">
+        survey_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="recordingsId != null">
+        recordings_id,
+      </if>
+      <if test="auctionNoticeId != null">
+        auction_notice_id,
+      </if>
+      <if test="corporeHouseId != null">
+        corpore_house_id,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="deliveryPdId != null">
+        delivery_pd_id,
+      </if>
+      <if test="realConditionId != null">
+        real_condition_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id, jdbcType=BIGINT},
+      </if>
+      <if test="surveyId != null">
+        #{surveyId, jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name, jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url, jdbcType=VARCHAR},
+      </if>
+      <if test="recordingsId != null">
+        #{recordingsId, jdbcType=BIGINT},
+      </if>
+      <if test="auctionNoticeId != null">
+        #{auctionNoticeId, jdbcType=BIGINT},
+      </if>
+      <if test="corporeHouseId != null">
+        #{corporeHouseId, jdbcType=BIGINT},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag, jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content, jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type, jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryPdId != null">
+        #{deliveryPdId, jdbcType=BIGINT},
+      </if>
+      <if test="realConditionId != null">
+        #{realConditionId, jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime, jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime, jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser, jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser, jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version, jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark, jdbcType=VARCHAR},
+      </if>
+    </trim>
+    <selectKey resultType="long" keyProperty="id" order="AFTER">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  <select id="getPotoFileUrls" resultMap="BaseResultMap">
+    SELECT url from photo_files
+    <where>
+      <choose>
+        <when test="surveyId != null">
+          survey_id=#{surveyId}
+        </when>
+        <when test="recordingsId != null">
+          recordings_id=#{recordingsId}
+        </when>
+        <when test="auctionNoticeId != null">
+          auction_notice_id=#{auctionNoticeId}
+        </when>
+        <when test="corporeHouseId != null">
+          corpore_house_id=#{corporeHouseId}
+        </when>
+        <when test="deliveryPdId != null">
+          delivery_pd_id=#{deliveryPdId}
+        </when>
+        <when test="realConditionId != null">
+          real_condition_id=#{realConditionId}
+        </when>
+      </choose>
+    </where>
+  </select>
+</mapper>

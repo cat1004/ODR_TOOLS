@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet id="create_table_arbitration_case_adjust" author="Rimon">
+    <sql>
+      CREATE TABLE `arbitration_case_adjust` (
+      `id` varchar(32) NOT NULL,
+      `case_id` varchar(32) DEFAULT NULL COMMENT '案件id',
+      `applicant_id` varchar(32) DEFAULT NULL COMMENT '申请人id',
+      `respondent_id` varchar(32) DEFAULT NULL COMMENT '被申请人id',
+      `applicant_status` varchar(2) DEFAULT NULL COMMENT '申请人调解状态（申请、未申请)',
+      `respondent_status` varchar(2) DEFAULT NULL COMMENT '被申请人调解状态（申请、未申请)',
+      `status` varchar(2) DEFAULT NULL COMMENT '是否删除',
+      `create_user` varchar(255) DEFAULT NULL COMMENT '创建人',
+      `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+      `update_user` varchar(255) DEFAULT NULL COMMENT '更新用户',
+      `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+      PRIMARY KEY (`id`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='案件调结状态表';
+    </sql>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beiming.evidenceplatform.dao.SurveyMapper">
+	<resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.Survey">
+		<!-- WARNING - @mbggenerated -->
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="water_charges" jdbcType="VARCHAR" property="waterCharges" />
+		<result column="finish_time" jdbcType="TIMESTAMP" property="finishTime" />
+		<result column="elec_charges" jdbcType="VARCHAR" property="elecCharges" />
+		<result column="property_fees" jdbcType="VARCHAR" property="propertyFees" />
+		<result column="taxes" jdbcType="VARCHAR" property="taxes" />
+		<result column="rent" jdbcType="VARCHAR" property="rent" />
+		<result column="occupy" jdbcType="VARCHAR" property="occupy" />
+		<result column="other" jdbcType="VARCHAR" property="other" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		<result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		<result column="version" jdbcType="INTEGER" property="version" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+	</resultMap>
+
+	<!-- 根据勘验情况的id查询详细信息 -->
+	<select id="getSurveyById" resultMap="BaseResultMap">
+		select * from survey where id=#{id}
+	</select>
+
+	<insert id="addSurvey" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO survey
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="waterCharges != null">
+				water_charges,
+			</if>
+			<if test="finishTime != null">
+				finish_time,
+			</if>
+			<if test="elecCharges != null">
+				elec_charges,
+			</if>
+			<if test="propertyFees != null">
+				property_fees,
+			</if>
+			<if test="taxes != null">
+				taxes,
+			</if>
+			<if test="rent != null">
+				rent,
+			</if>
+			<if test="occupy != null">
+				occupy,
+			</if>
+			<if test="other != null">
+				other,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="createUser != null">
+				create_user,
+			</if>
+			<if test="updateUser != null">
+				update_user,
+			</if>
+			<if test="version != null">
+				version,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id, jdbcType=BIGINT},
+			</if>
+			<if test="name != null">
+				#{name, jdbcType=VARCHAR},
+			</if>
+			<if test="waterCharges != null">
+				#{waterCharges, jdbcType=VARCHAR},
+			</if>
+			<if test="finishTime != null">
+				#{finishTime, jdbcType=TIMESTAMP},
+			</if>
+			<if test="elecCharges != null">
+				#{elecCharges, jdbcType=VARCHAR},
+			</if>
+			<if test="propertyFees != null">
+				#{propertyFees, jdbcType=VARCHAR},
+			</if>
+			<if test="taxes != null">
+				#{taxes, jdbcType=VARCHAR},
+			</if>
+			<if test="rent != null">
+				#{rent, jdbcType=VARCHAR},
+			</if>
+			<if test="occupy != null">
+				#{occupy, jdbcType=VARCHAR},
+			</if>
+			<if test="other != null">
+				#{other, jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime, jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime, jdbcType=TIMESTAMP},
+			</if>
+			<if test="createUser != null">
+				#{createUser, jdbcType=VARCHAR},
+			</if>
+			<if test="updateUser != null">
+				#{updateUser, jdbcType=VARCHAR},
+			</if>
+			<if test="version != null">
+				#{version, jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark, jdbcType=VARCHAR},
+			</if>
+		</trim>
+		<selectKey resultType="long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+</mapper>

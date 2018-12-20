@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.RealConditionMapper" >
+  <resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.RealCondition" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="corpore_house_id" property="corporeHouseId" jdbcType="BIGINT"/>
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="consultant" property="consultant" jdbcType="VARCHAR" />
+    <result column="problems" property="problems" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 看样现场信息反馈展示 -->
+  <select id="findByCorporeHoust" resultMap="realConditionFeebackInfoAndPhotoUrl">
+		SELECT
+		t0.problems,
+		t0.order_time as ordertime,
+		t1.url
+	FROM
+		real_condition t0
+	inner join photo_files t1 on t0.id = t1.real_condition_id
+	inner join corpore_house t2 on t2.id=t1.corpore_house_id
+	<where>
+	   <if test="corporeHouseId !=null">
+         t0.corpore_house_id=#{corporeHouseId}
+		</if>
+	</where>
+			order by t0.order_time 
+    </select>
+     <resultMap  type="com.beiming.evidenceplatform.domin.dto.requestdto.RealConditionFeedbackInfoDTO"  id="realConditionFeebackInfoAndPhotoUrl">
+        <id column="id"  property="id"></id>
+        <result column="problems" property="problems"></result>
+        <result column="ordertime" property="orderTime"></result>
+        <collection  property="photoList"  javaType="ArrayList"   ofType="com.beiming.evidenceplatform.domain.PhotoFiles">
+            <id column="id"  property="id"></id>
+            <result column="url"  property="url"></result>
+        </collection>
+    </resultMap>
+  <insert id="saveRealCondition" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO real_condition
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="corporeHouseId != null">
+        corpore_house_id,
+      </if>
+      <if test="orderTime != null">
+        order_time,
+      </if>
+      <if test="consultant != null">
+        consultant,
+      </if>
+      <if test="problems != null">
+        problems,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="corporeHouseId != null">
+        #{corporeHouseId, jdbcType=BIGINT},
+      </if>
+      <if test="orderTime != null">
+        #{orderTime, jdbcType=TIMESTAMP},
+      </if>
+      <if test="consultant != null">
+        #{consultant, jdbcType=VARCHAR},
+      </if>
+      <if test="problems != null">
+        #{problems, jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime, jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime, jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser, jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser, jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version, jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark, jdbcType=VARCHAR},
+      </if>
+    </trim>
+    <selectKey resultType="long" keyProperty="id" order="AFTER">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  <select id="getRealConditionByCorporeHouseId" resultMap="BaseResultMap">
+    select * from real_condition where corpore_house_id = #{corporeHouseId}
+  </select>
+</mapper>

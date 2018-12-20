@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.AuctionDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.AuctionDetail" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="corpore_house_id" property="corporeHouseId" jdbcType="BIGINT" />
+    <result column="auction_url" property="auctionUrl" jdbcType="VARCHAR" />
+    <result column="auction_plat" property="auctionPlat" jdbcType="VARCHAR" />
+    <result column="auction_type" property="auctionType" jdbcType="VARCHAR" />
+    <result column="preemption" property="preemption" jdbcType="VARCHAR" />
+    <result column="reserve_price" property="reservePrice" jdbcType="VARCHAR" />
+    <result column="cash_deposit" property="cashDeposit" jdbcType="VARCHAR" />
+    <result column="auction_add_price" property="auctionAddPrice" jdbcType="VARCHAR" />
+    <result column="auction_price" property="auctionPrice" jdbcType="VARCHAR" />
+    <result column="aucton_period" property="auctonPeriod" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="saveAuctionDetail" useGeneratedKeys="true" keyProperty="id">
+    insert into auction_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="corporeHouseId != null">
+        corpore_house_id,
+      </if>
+      <if test="auctionUrl != null">
+        auction_url,
+      </if>
+      <if test="auctionPlat != null">
+        auction_plat,
+      </if>
+      <if test="auctionType != null">
+        auction_type,
+      </if>
+      <if test="preemption != null">
+        preemption,
+      </if>
+      <if test="reservePrice != null">
+        reserve_price,
+      </if>
+      <if test="cashDeposit != null">
+        cash_deposit,
+      </if>
+      <if test="auctionAddPrice != null">
+        auction_add_price,
+      </if>
+      <if test="auctionPrice != null">
+        auction_price,
+      </if>
+      <if test="auctonPeriod != null">
+        aucton_period,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="corporeHouseId != null">
+        #{corporeHouseId,jdbcType=BIGINT},
+      </if>
+      <if test="auctionUrl != null">
+        #{auctionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="auctionPlat != null">
+        #{auctionPlat,jdbcType=VARCHAR},
+      </if>
+      <if test="auctionType != null">
+        #{auctionType,jdbcType=VARCHAR},
+      </if>
+      <if test="preemption != null">
+        #{preemption,jdbcType=VARCHAR},
+      </if>
+      <if test="reservePrice != null">
+        #{reservePrice,jdbcType=VARCHAR},
+      </if>
+      <if test="cashDeposit != null">
+        #{cashDeposit,jdbcType=VARCHAR},
+      </if>
+      <if test="auctionAddPrice != null">
+        #{auctionAddPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="auctionPrice != null">
+        #{auctionPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="auctonPeriod != null">
+        #{auctonPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime, jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime, jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser, jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser, jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version, jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark, jdbcType=VARCHAR},
+      </if>
+    </trim>
+    <selectKey resultType="long" keyProperty="id" order="AFTER">
+    SELECT LAST_INSERT_ID()
+  </selectKey>
+  </insert>
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet id="create_table_role" author="Rimon">
+    <sql>
+      CREATE TABLE `role` (
+      `id` varchar(32) NOT NULL COMMENT '主键id',
+      `role_name` varchar(100) NOT NULL COMMENT '角色名称',
+      `role_code` varchar(100) NOT NULL COMMENT '角色代码',
+      `status` varchar(2) DEFAULT NULL COMMENT '状态:0-正常,1-删除',
+      `remark` varchar(1024) DEFAULT NULL COMMENT '备注',
+      `create_user` varchar(32) DEFAULT NULL COMMENT '创建人',
+      `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+      `update_user` varchar(32) DEFAULT NULL COMMENT '修改人',
+      `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+      `version` int(11) DEFAULT '0' COMMENT '版本号',
+      PRIMARY KEY (`id`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色表';
+    </sql>
+  </changeSet>
+</databaseChangeLog>

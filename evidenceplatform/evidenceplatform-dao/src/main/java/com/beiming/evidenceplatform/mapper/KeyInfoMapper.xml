@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beiming.evidenceplatform.dao.KeyInfoMapper">
+  <resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.KeyInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="key_name" jdbcType="VARCHAR" property="keyName" />
+    <result column="stock" jdbcType="VARCHAR" property="stock" />
+    <result column="key_num" jdbcType="INTEGER" property="keyNum" />
+    <result column="corpore_house_id" jdbcType="BIGINT" property="corporeHouseId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  
+  <!-- 根据标的物id查询钥匙基本信息详情 -->
+  <select id="getKeyByCorporeHouseId" parameterType="int" resultMap="BaseResultMap">
+   select * from `key_info` where corpore_house_id=#{corporeHouseId}
+  </select>
+  
+  <!-- 获取房产下所有的钥匙信息 -->
+	<select id="getKeysByCorporeHouseId" resultMap="BaseResultMap">
+		select * from `key_info` where corpore_house_id=#{corporeHouseId}
+	</select>
+  <!-- 获取钥匙库存 -->
+  <select id="getStockById" resultType="String">
+		select stock from key_info where id=#{id}
+	</select>
+  <!-- 根据主键获取钥匙信息 -->
+  <select id="getKeyById" resultMap="BaseResultMap">
+		select * from key_info where id=#{id}
+	</select>
+
+</mapper>

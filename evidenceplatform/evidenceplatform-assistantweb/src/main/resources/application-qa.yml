@@ -1,0 +1,96 @@
+server:
+  port: 7081
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+  datasource:
+    url: jdbc:mysql://122.112.247.143:3306/evidenceplatform_test?useUnicode=yes&characterEncoding=UTF-8
+    username: user
+    password: 1qaz@WSX
+    type: org.apache.tomcat.jdbc.pool.DataSource
+    tomcat:
+      maxActive: 100
+      maxIdle: 20
+      minIdle: 10
+      initialSize: 10
+      testOnBorrow: false
+      testOnReturn: false
+      testWhileIdle: true
+      removeAbandoned: true
+      logAbandoned: true
+      validationQuery: SELECT 1
+      maxWait: 10000
+      timeBetweenEvictionRunsMillis: 30000
+      validationInterval: 30000
+  redis:
+    host: 123.206.193.140
+    port: 22000
+    password: bmsoft@dev
+    database: 0
+    timeout: 10000ms
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 1
+        max-wait: 10000ms
+  servlet:
+    multipart:
+      maxFileSize: 50Mb
+      maxRequestSize: 50Mb
+
+mybatis:
+  mapper-locations: classpath:com/beiming/evidenceplatform/mapper/*.xml
+  type-aliases-package: com.beiming.evidenceplatform.domain
+  configuration:
+    map-underscore-to-camel-case: true
+tencent:
+  cos:
+    url: https://yan-1252000310.cos.ap-chengdu.myqcloud.com
+    secrectId: AKIDHWfk08GmwwpaItPxJsQoAUfu02zuvRDo
+    secrectKey: nVAi9TfjfTFzqsqhUDqKh2HLF1c6cAe0
+    appId: 1252000310
+    area: ap-chengdu
+    bucketName: yan-1252000310
+  sms:
+    adkappid: 1400107115
+    appkey: a1d9349ab7d5c4fc5816c1355578630e
+file:
+  storage:
+    root:
+      dir: /data/fileStorage/qa/
+    tmp:
+      dir: /data/fileStorage/qa/temp/
+    prefix: /libra/
+  document:
+    dir: /data/document
+
+evaluate:
+  userName: EVIDENCEPLATFORM_TEST
+  password: EVIDENCEPLATFORM_TEST.
+  context: http://118.89.166.151:9080/
+
+jwt:
+  secret: dfskfsfsd
+  expireMinutes:
+    authToken: 30
+    refreshToken: 360
+
+sms:
+  sendSwitch: true
+  sendFrequencySeconds: 60
+  code:
+    expireMinutes: 10
+
+swagger:
+  host: 122.112.247.143:7081
+
+spring.jackson.date-format: yyyy-MM-dd HH:mm:ss
+spring.jackson.time-zone: GMT+8
+
+multipart:
+  enabled: true
+  max-file-size: 220mb
+  max-request-size: 220mb

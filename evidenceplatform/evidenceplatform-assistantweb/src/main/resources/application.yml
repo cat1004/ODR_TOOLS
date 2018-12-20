@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: dev
+#    active: local
+#    active: online
+#    active: qa
+mybatis:
+  mapper-locations: classpath:com/beiming/evidenceplatform/mapper/*.xml
+  type-aliases-package: com.beiming.evidenceplatform.domain
+  configuration:
+    map-underscore-to-camel-case: true
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params=count: countSql
+
+spring.jackson.date-format: yyyy-MM-dd HH:mm:ss
+spring.jackson.time-zone: GMT+8

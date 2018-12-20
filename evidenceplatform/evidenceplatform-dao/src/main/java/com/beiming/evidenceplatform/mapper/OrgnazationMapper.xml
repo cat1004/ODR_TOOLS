@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.OrgnazationMapper">
+
+  <resultMap id="orgnazation" type="com.beiming.evidenceplatform.domain.Orgnazation">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT"/>
+    <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+    <result column="organization_name" property="organizationName" jdbcType="VARCHAR"/>
+    <result column="type" property="type" jdbcType="VARCHAR"/>
+    <result column="organization_address" property="organizationAddress" jdbcType="VARCHAR"/>
+    <result column="grade_level" property="gradeLevel" jdbcType="VARCHAR"/>
+    <result column="area_level" property="areaLevel" jdbcType="VARCHAR"/>
+    <result column="area_id" property="areaId" jdbcType="VARCHAR"/>
+    <result column="status" property="status" jdbcType="VARCHAR"/>
+    <result column="organization_area" property="organizationArea" jdbcType="VARCHAR"/>
+    <result column="super_name" property="superName" jdbcType="VARCHAR"/>
+    <result column="grade" property="grade" jdbcType="VARCHAR"/>
+    <result column="organization_code" property="organizationCode" jdbcType="VARCHAR"/>
+    <result column="detail_address" property="detailAddress" jdbcType="VARCHAR"/>
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+    <result column="version" property="version" jdbcType="INTEGER"/>
+    <result column="remark" property="remark" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <select id="queryAllCourt" resultMap="orgnazation">
+  	SELECT * FROM orgnazation where type="140000"
+  </select>
+
+  <!--  根据地区查询法院列表  -->
+  <select id="getCourtByArea" resultMap="orgnazation">
+    SELECT * FROM orgnazation WHERE type="140000"
+    AND area_id=#{areaId}
+  </select>
+  <!-- 根据地区id/类型/关键字查询机构 -->
+  <select id="getOrgnazationByAreaIdAndTypeAndName" resultMap="orgnazation">
+  	SELECT * FROM orgnazation WHERE area_id=#{areaId} AND type=#{type} 
+  	<if test="search != null">
+  	AND organization_name like CONCAT('%',#{search},'%')
+  	</if>
+  </select>
+  <!-- 根据名称查询机构 -->
+  <select id="queryOrgnazationByName" resultMap="orgnazation">
+  	SELECT * FROM orgnazation WHERE organization_name=#{name} AND type=#{type}
+  </select>
+  <!-- 添加机构 -->
+  <insert id="addOrgnazation" parameterType="com.beiming.evidenceplatform.domain.Orgnazation">
+  	INSERT INTO orgnazation (organization_name,type,organization_address,area_level,area_id,create_time,create_user)
+  	VALUES(#{organizationName},#{type},#{organizationAddress},#{areaLevel},#{areaId},now(),#{createUser})
+  </insert>
+  <!-- 通过id查询机构 -->
+  <select id="getOrgnazationById" resultMap="orgnazation">
+  	SELECT * FROM orgnazation WHERE id=#{id}
+  </select>
+  <!-- 通过id删除一条机构数据 -->
+  <delete id="deleteOrgnazation">
+  	DELETE FROM orgnazation WHERE id=#{id}
+  </delete>
+  <!-- 修改机构 -->
+  <update id="updateOrgnazationName">
+  	UPDATE orgnazation SET organization_name=#{organizationName},update_time=now(),
+  	organization_address=#{organizationAddress},area_level=#{areaLevel},area_id=#{areaId},update_user=#{updateUser}
+  	WHERE id=#{id}
+  </update>
+</mapper>

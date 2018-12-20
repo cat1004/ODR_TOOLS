@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beiming.evidenceplatform.dao.KeyUseMapper">
+	<resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.KeyUse">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="user_name" jdbcType="VARCHAR" property="userName" />
+		<result column="key_num" jdbcType="INTEGER" property="keyNum" />
+		<result column="usering" jdbcType="VARCHAR" property="usering" />
+		<result column="order_back_time" jdbcType="TIMESTAMP" property="orderBackTime" />
+		<result column="key_name" jdbcType="VARCHAR" property="keyName" />
+		<result column="user_time" jdbcType="TIMESTAMP" property="userTime" />
+		<result column="corpore_house_id" jdbcType="BIGINT" property="corporeHouseId" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		<result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		<result column="version" jdbcType="INTEGER" property="version" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="key_id" jdbcType="BIGINT" property="keyId" />
+		<result column="real_back_time" jdbcType="TIMESTAMP" property="realBackTime" />
+	</resultMap>
+
+	<!-- 根据标的物id查询钥匙使用详情 -->
+	<select id="getKeyUseByCorporeHouseId" parameterType="int"
+		resultMap="BaseResultMap">
+		select * from `key_use` where corpore_house_id=#{corporeHouseId}
+	</select>
+	<!--根据标的物id查询钥匙使用详情 -->
+	<select id="getKeyUsesByCorporeHouseId"
+		resultMap="BaseResultMap">
+		select * from `key_use` where corpore_house_id=#{corporeHouseId}
+	</select>
+	<!-- 根据keyid查询钥匙使用详情 -->
+	<select id="getKeyUseByKeyId" parameterType="int" resultMap="BaseResultMap">
+		select * from `key_use` where key_id=#{keyId} and status=1
+	</select>
+
+	<select id="getKeyNumByKeyId" resultType="int">
+		select key_num from key_use where key_id=#{keyId}
+	</select>
+
+	<select id="getKeyUseById" resultMap="BaseResultMap">
+		select * from key_use where id = #{id}
+	</select>
+</mapper>

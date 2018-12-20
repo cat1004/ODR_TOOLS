@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.beiming.evidenceplatform.dao.DeliveryPdMapper" >
+  <resultMap id="BaseResultMap" type="com.beiming.evidenceplatform.domain.DeliveryPd" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="delivery_pd_time" property="deliveryPdTime" jdbcType="TIMESTAMP" />
+    <result column="corpore_house_id" property="corporeHouseId" jdbcType="BIGINT" />
+    <result column="delivery_pd_process" property="deliveryPdProcess" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!--交割进度展示  -->
+  <select id="showDeliverpdReport"  resultType="com.beiming.evidenceplatform.domin.dto.requestdto.DeliverypdInfo">
+  	SELECT
+		t0.delivery_pd_process AS deliverypdname,
+		t0.delivery_pd_time as deliverypdtime
+	FROM
+		delivery_pd t0 INNER join corpore_house t1 ON t0.corpore_house_id = t1.id
+	<where>
+      <if test="corporeHouseId !=null">
+          t0.corpore_house_id=#{corporeHouseId}
+      </if>
+  </where>
+      order by t0.delivery_pd_time
+  </select>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+	<include file="table/ArbitrationCase.table.xml" relativeToChangelogFile="true" />
+	<include file="table/ArbitrationCaseAdjust.table.xml" relativeToChangelogFile="true" />
+	<include file="table/ArbitrationCaseAdjustMessages.table.xml" relativeToChangelogFile="true" />
+	<include file="table/ArbitrationCaseArgument.table.xml" relativeToChangelogFile="true" />
+	<include file="table/ArbitrationCaseDocument.table.xml" relativeToChangelogFile="true" />
+	<include file="table/ArbitrationCaseLog.table.xml" relativeToChangelogFile="true" />
+	<include file="table/ArbitrationCasePay.table.xml" relativeToChangelogFile="true" />
+	<include file="table/ArbitrationCaseProblem.table.xml" relativeToChangelogFile="true" />
+	<include file="table/ArbitrationCaseProof.table.xml" relativeToChangelogFile="true" />
+	<include file="table/ArbitrationCaseUser.table.xml" relativeToChangelogFile="true" />
+	<include file="table/ArbitrationUserProxy.table.xml" relativeToChangelogFile="true" />
+	<include file="table/ArbitrationUserRelation.table.xml" relativeToChangelogFile="true" />
+	<include file="table/Areas.table.xml" relativeToChangelogFile="true" />
+	<include file="table/OrganizeDetail.table.xml" relativeToChangelogFile="true" />
+	<include file="table/Role.table.xml" relativeToChangelogFile="true" />
+	<include file="table/User.table.xml" relativeToChangelogFile="true" />
+	<include file="table/UserAddress.table.xml" relativeToChangelogFile="true" />
+	<include file="table/UserDetail.table.xml" relativeToChangelogFile="true" />
+	<include file="table/UserMessage.table.xml" relativeToChangelogFile="true" />
+	<include file="table/FileInfo.table.xml" relativeToChangelogFile="true" />
+</databaseChangeLog>
